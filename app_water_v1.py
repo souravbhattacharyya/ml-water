@@ -9,6 +9,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from statistics import mode
+import serial
+import time
 
 Random1 = pickle.load(open('Random1.pickle', 'rb'))
 Random2 = pickle.load(open('Random2.pickle', 'rb'))
@@ -61,7 +63,14 @@ try:
         temp_pred_list.append(pred5[i])
         cumulative_pred.append(mode(temp_pred_list))
     print(cumulative_pred[0])
-    sendAndgetResponse(cumulative_pred[0])
+    # sendAndgetResponse(cumulative_pred[0])
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+    ser.reset_input_buffer()
+    while True:
+        ser.write(b"Hello from Raspberry Pi!\n")
+        line = ser.readline().decode('utf-8').rstrip()
+        print('final output'+line)
+        time.sleep(1)
 
 except Exception as ex:
 
